@@ -33,10 +33,10 @@ func NewServer() *TcpChatServer {
 }
 
 func (s *TcpChatServer) Listen(address string) error {
-	l, err := net.Listen("tcp", address)
+	listener, err := net.Listen("tcp", address)
 
 	if err == nil {
-		s.listener = l
+		s.listener = listener
 	}
 
 	log.Printf("Listening on %v", address)
@@ -50,13 +50,11 @@ func (s *TcpChatServer) Close() {
 
 func (s *TcpChatServer) Start() {
 	for {
-		// XXX: need a way to break the loop
 		conn, err := s.listener.Accept()
 
 		if err != nil {
 			log.Print(err)
 		} else {
-			// handle connection
 			client := s.accept(conn)
 			go s.serve(client)
 		}
